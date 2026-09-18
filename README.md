@@ -20,6 +20,10 @@ $$\text{Consumer Price (100\%)} = \text{Farmer Realization (76\%)} + \text{Cold 
 
 ## 2. System Architecture
 
+<p align="center">
+  <img src="./docs/tech-stack.jpg" alt="AgriDirect Technology Stack" width="100%" />
+</p>
+
 ```
 ┌────────────────────────────────────────────────────────────────────────────────┐
 │                       AgriDirect Client PWA (React 19)                         │
