@@ -80,7 +80,17 @@ export const useAgriStore = create<AgriStore>((set, get) => ({
     try {
       const session = await AuthService.getSession();
       if (session?.user) {
-        const profile = await ProfileService.getProfile(session.user.id);
+        let profile = await ProfileService.getProfile(session.user.id);
+        if (!profile) {
+          profile = await ProfileService.upsertProfile({
+            id: session.user.id,
+            email: session.user.email || '',
+            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+            role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
+            phone_number: session.user.user_metadata?.phone_number,
+            preferred_language: 'hi',
+          });
+        }
         if (profile) {
           api.setToken(session.access_token);
           set({
@@ -103,7 +113,17 @@ export const useAgriStore = create<AgriStore>((set, get) => ({
     // Subscribe to auth state changes (sign in, sign out, token refresh)
     AuthService.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
-        const profile = await ProfileService.getProfile(session.user.id);
+        let profile = await ProfileService.getProfile(session.user.id);
+        if (!profile) {
+          profile = await ProfileService.upsertProfile({
+            id: session.user.id,
+            email: session.user.email || '',
+            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+            role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
+            phone_number: session.user.user_metadata?.phone_number,
+            preferred_language: 'hi',
+          });
+        }
         if (profile) {
           api.setToken(session.access_token);
           set({

@@ -147,6 +147,42 @@ export class AuthService {
   }
 
   /**
+   * Sign in using Google OAuth
+   */
+  static async signInWithGoogle(): Promise<{ error: AuthErrorResult | null }> {
+    if (!isSupabaseConfigured) {
+      console.warn('ℹ️ [AuthService] Supabase not configured. Simulating Google login.');
+      return { error: null };
+    }
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        return { error: AuthService.formatAuthError(error) };
+      }
+
+      return { error: null };
+    } catch (err: unknown) {
+      return {
+        error: {
+          code: 'GOOGLE_AUTH_FAILED',
+          message: err instanceof Error ? err.message : 'Failed to initialize Google Sign In.',
+        },
+      };
+    }
+  }
+
+  /**
    * Request Email OTP for login or registration
    */
   static async sendOtp(
@@ -165,7 +201,6 @@ export class AuthService {
     }
 
     if (!isSupabaseConfigured) {
-      // In unconfigured development/offline mode, return simulated success
       console.warn('ℹ️ [AuthService] Supabase credentials not set. Simulated OTP sent to', trimmedEmail);
       return { error: null };
     }
@@ -183,7 +218,7 @@ export class AuthService {
                 upi_id: metadata.upi_id,
               }
             : undefined,
-          shouldCreateUser: Boolean(metadata), // true for registration, false for login if desired
+          shouldCreateUser: true,
         },
       });
 
@@ -354,6 +389,20 @@ export class AuthService {
       return {
         code: 'USER_NOT_FOUND',
         message: 'No registered user found with this email. Please create an account first.',
+      };
+    }
+
+    if (rawMsg.includes('email not confirmed') || rawMsg.includes('email_not_confirmed')) {
+      return {
+        code: 'EMAIL_NOT_CONFIRMED',
+        message: 'Your email address is not yet confirmed. Please check your inbox or spam folder, or disable "Confirm email" in your Supabase Dashboard.',
+      };
+    }
+
+    if (rawMsg.includes('provider is not enabled') || rawMsg.includes('unsupported provider')) {
+      return {
+        code: 'PROVIDER_DISABLED',
+        message: 'Google Sign-In is not enabled yet in your Supabase project. Please enable Google in Supabase Dashboard (Authentication -> Providers -> Google).',
       };
     }
 
