@@ -242,6 +242,10 @@ export class SpeechProvider {
    * Synthesize and play spoken speech for a text string.
    * Prioritizes native window.speechSynthesis, falling back to server-side synthesized audio.
    */
+  /**
+   * Synthesize and play spoken speech for a text string.
+   * Prioritizes high-fidelity server synthesized Indic audio, with graceful fallback.
+   */
   public static async speakText(
     text: string,
     lang: PreferredLanguage,
@@ -251,9 +255,10 @@ export class SpeechProvider {
     this.stopSpeaking();
 
     // 1. If server pre-synthesized audio is provided and valid, play via HTMLAudioElement
-    if (serverAudioBase64 && serverAudioBase64.length > 100) {
+    if (serverAudioBase64 && serverAudioBase64.length > 200) {
       try {
-        const audio = new Audio(`data:audio/wav;base64,${serverAudioBase64}`);
+        const mime = serverAudioBase64.startsWith('//uQ') || serverAudioBase64.startsWith('SUQz') ? 'audio/mpeg' : 'audio/mpeg';
+        const audio = new Audio(`data:${mime};base64,${serverAudioBase64}`);
         this.activeAudioElement = audio;
         audio.onended = () => {
           this.activeAudioElement = null;
@@ -261,21 +266,60 @@ export class SpeechProvider {
         };
         audio.onerror = () => {
           this.activeAudioElement = null;
-          this.speakViaNativeTTS(text, lang, onFinish);
+          this.fetchAndPlayServerAudio(text, lang, onFinish);
         };
         await audio.play();
         return;
       } catch (err) {
-        console.warn('[SpeechProvider] Server audio playback failed, falling back to native TTS:', err);
+        console.warn('[SpeechProvider] Server audio playback failed, falling back:', err);
       }
     }
 
-    // 2. Native Browser TTS via window.speechSynthesis
+    // 2. Fetch Indic speech synthesis from server /api/v1/voice/synthesize
+    const played = await this.fetchAndPlayServerAudio(text, lang, onFinish);
+    if (played) return;
+
+    // 3. Last fallback: Native Browser TTS via window.speechSynthesis
     this.speakViaNativeTTS(text, lang, onFinish);
   }
 
   /**
-   * Speak via window.speechSynthesis
+   * Fetch synthesized Indic speech audio from backend
+   */
+  private static async fetchAndPlayServerAudio(
+    text: string,
+    lang: PreferredLanguage,
+    onFinish?: () => void
+  ): Promise<boolean> {
+    try {
+      const res = await fetch('/api/v1/voice/synthesize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, language: lang }),
+      });
+      if (res.ok) {
+        const body = (await res.json()) as any;
+        const b64 = body?.data?.audioBase64;
+        const mime = body?.data?.mimeType || 'audio/mpeg';
+        if (b64 && b64.length > 200) {
+          const audio = new Audio(`data:${mime};base64,${b64}`);
+          this.activeAudioElement = audio;
+          audio.onended = () => {
+            this.activeAudioElement = null;
+            onFinish?.();
+          };
+          await audio.play();
+          return true;
+        }
+      }
+    } catch (err) {
+      console.warn('[SpeechProvider] Dynamic synthesis fetch error:', err);
+    }
+    return false;
+  }
+
+  /**
+   * Speak via window.speechSynthesis (only if suitable voice exists)
    */
   private static speakViaNativeTTS(
     text: string,
@@ -301,6 +345,14 @@ export class SpeechProvider {
       const matchingVoice = voices.find(
         (v) => v.lang.toLowerCase() === targetCode || v.lang.toLowerCase().startsWith(lang)
       );
+
+      // CRITICAL: If language is Indic and browser has no Indic voice, do NOT use English voice (which only reads numbers)
+      if (!matchingVoice && lang !== 'en') {
+        console.warn(`[SpeechProvider] No native ${lang} voice installed in browser; skipped English fallback to avoid number-only speech.`);
+        onFinish?.();
+        return;
+      }
+
       if (matchingVoice) {
         utterance.voice = matchingVoice;
       }

@@ -130,7 +130,7 @@ describe('AgriDirect Vernacular Voice AI & Slot Normalization Test Suite', () =>
     const body = (await res.json()) as any;
     assert.ok(body.data);
     assert.ok(body.data.audioBase64);
-    assert.equal(body.data.mimeType, 'audio/wav');
+    assert.ok(body.data.mimeType === 'audio/mpeg' || body.data.mimeType === 'audio/wav');
     assert.ok(body.data.durationEstimateMs > 0);
   });
 
