@@ -15,6 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
   const {
     currentUser,
     isAuthenticated,
+    isAuthLoading,
     logout,
     currentRole,
     setRole,
@@ -301,13 +302,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
 
             {/* User Auth Status / Trigger (ALWAYS VISIBLE & PROMINENT) */}
             {isAuthenticated ? (
-              <div className="flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-xl bg-surface-container border border-outline-variant text-xs shadow-sm shrink-0">
-                <div className="w-7 h-7 rounded-lg bg-primary text-secondary-fixed flex items-center justify-center font-bold text-xs shrink-0">
-                  {currentUser?.full_name?.charAt(0) || 'U'}
+              <div className="flex items-center gap-2 pl-2 pr-2 py-1 rounded-xl bg-surface-container border border-outline-variant text-xs shadow-sm shrink-0 animate-fadeIn">
+                <div className="w-7 h-7 rounded-lg bg-primary text-secondary-fixed flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                  {currentUser?.full_name?.charAt(0)?.toUpperCase() || 'U'}
                 </div>
-                <div className="hidden sm:block text-left leading-tight max-w-[85px] truncate">
-                  <div className="font-bold text-primary truncate text-[11px]">{currentUser?.full_name}</div>
-                  <div className="text-[9px] text-on-surface-variant font-mono uppercase">{currentUser?.role}</div>
+                <div className="flex flex-col text-left leading-tight max-w-[110px] sm:max-w-[150px] truncate" title={currentUser?.full_name}>
+                  <div className="font-bold text-primary truncate text-[12px]">{currentUser?.full_name}</div>
+                  <div className="text-[9px] text-on-surface-variant font-mono uppercase tracking-wider">{currentUser?.role}</div>
                 </div>
                 <button
                   onClick={logout}
@@ -318,12 +319,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
                   <span className="material-symbols-outlined text-[16px]">logout</span>
                 </button>
               </div>
+            ) : isAuthLoading ? (
+              <div className="flex items-center justify-center h-9 sm:h-10 px-3 rounded-xl bg-surface-container-low border border-outline-variant text-xs text-on-surface-variant shrink-0">
+                <span className="material-symbols-outlined text-[16px] animate-spin mr-1.5">progress_activity</span>
+                <span className="text-[11px] font-medium">Checking...</span>
+              </div>
             ) : (
               <button
                 onClick={onOpenAuth}
                 type="button"
                 className="inline-flex items-center justify-center gap-1.5 h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-sm font-bold shadow-sm transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shrink-0 text-xs select-none cursor-pointer whitespace-nowrap"
-                title="Sign In with Email OTP"
+                title="Sign In"
               >
                 <span className="material-symbols-outlined text-[16px]">lock</span>
                 <span>Sign In</span>

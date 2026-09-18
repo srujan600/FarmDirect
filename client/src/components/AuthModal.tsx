@@ -110,16 +110,31 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     let profile: User | null = null;
 
     if (session?.user?.id) {
-      profile = await ProfileService.getProfile(session.user.id);
+      try {
+        profile = await ProfileService.getProfile(session.user.id);
+        if (!profile) {
+          profile = await ProfileService.upsertProfile({
+            id: session.user.id,
+            email: session.user.email || trimmedEmail,
+            full_name: session.user.user_metadata?.full_name || trimmedEmail.split('@')[0],
+            role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
+            phone_number: session.user.user_metadata?.phone_number,
+            preferred_language: (session.user.user_metadata?.preferred_language as PreferredLanguage) || 'hi',
+          });
+        }
+      } catch (err) {
+        console.warn('[AuthModal] ProfileService error, using session fallback:', err);
+      }
       if (!profile) {
-        profile = await ProfileService.upsertProfile({
+        profile = {
           id: session.user.id,
-          email: session.user.email || trimmedEmail,
+          phone_number: session.user.user_metadata?.phone_number || '',
           full_name: session.user.user_metadata?.full_name || trimmedEmail.split('@')[0],
           role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
-          phone_number: session.user.user_metadata?.phone_number,
           preferred_language: (session.user.user_metadata?.preferred_language as PreferredLanguage) || 'hi',
-        });
+          created_at: session.user.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
       }
     } else {
       // Local simulation fallback
@@ -208,23 +223,37 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
 
     if (session) {
-      let profile = await ProfileService.getProfile(session.user.id);
+      let profile: User | null = null;
+      try {
+        profile = await ProfileService.getProfile(session.user.id);
+        if (!profile) {
+          profile = await ProfileService.upsertProfile({
+            id: session.user.id,
+            email: session.user.email || trimmedEmail,
+            full_name: fullName.trim(),
+            role,
+            phone_number: phoneNumber.trim() || undefined,
+            preferred_language: preferredLanguage,
+          });
+        }
+      } catch (err) {
+        console.warn('[AuthModal] ProfileService register error, fallback to local data:', err);
+      }
       if (!profile) {
-        profile = await ProfileService.upsertProfile({
+        profile = {
           id: session.user.id,
-          email: session.user.email || trimmedEmail,
+          phone_number: phoneNumber.trim() || '',
           full_name: fullName.trim(),
           role,
-          phone_number: phoneNumber.trim() || undefined,
           preferred_language: preferredLanguage,
-        });
+          created_at: session.user.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
       }
       setIsLoading(false);
-      if (profile) {
-        setAuthenticatedUser(profile, session.access_token);
-        showToast(`Registration complete! Welcome, ${profile.full_name}`, 'success');
-        handleClose();
-      }
+      setAuthenticatedUser(profile, session.access_token);
+      showToast(`Registration complete! Welcome, ${profile.full_name}`, 'success');
+      handleClose();
     } else {
       setIsLoading(false);
       setStep('otp');
@@ -301,16 +330,31 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     let profile: User | null = null;
 
     if (session?.user?.id) {
-      profile = await ProfileService.getProfile(session.user.id);
+      try {
+        profile = await ProfileService.getProfile(session.user.id);
+        if (!profile) {
+          profile = await ProfileService.upsertProfile({
+            id: session.user.id,
+            email: session.user.email || email,
+            full_name: fullName || session.user.user_metadata?.full_name || email.split('@')[0],
+            role: (session.user.user_metadata?.role as UserRole) || role,
+            phone_number: phoneNumber || session.user.user_metadata?.phone_number,
+            preferred_language: preferredLanguage || (session.user.user_metadata?.preferred_language as PreferredLanguage) || 'hi',
+          });
+        }
+      } catch (err) {
+        console.warn('[AuthModal] ProfileService verify OTP error, fallback to metadata:', err);
+      }
       if (!profile) {
-        profile = await ProfileService.upsertProfile({
+        profile = {
           id: session.user.id,
-          email: session.user.email || email,
+          phone_number: phoneNumber || session.user.user_metadata?.phone_number || '',
           full_name: fullName || session.user.user_metadata?.full_name || email.split('@')[0],
           role: (session.user.user_metadata?.role as UserRole) || role,
-          phone_number: phoneNumber || session.user.user_metadata?.phone_number,
           preferred_language: preferredLanguage || (session.user.user_metadata?.preferred_language as PreferredLanguage) || 'hi',
-        });
+          created_at: session.user.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
       }
     } else {
       profile = {

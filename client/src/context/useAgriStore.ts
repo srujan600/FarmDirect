@@ -63,12 +63,47 @@ const DEFAULT_PERSONA_USER: User = {
   updated_at: new Date().toISOString(),
 };
 
+const buildUserFromSession = (supabaseUser: any): User => {
+  const meta = supabaseUser.user_metadata || {};
+  const email = supabaseUser.email || '';
+  const fullName =
+    meta.full_name ||
+    meta.name ||
+    meta.user_name ||
+    (email ? email.split('@')[0] : 'Verified User');
+
+  return {
+    id: supabaseUser.id,
+    phone_number: meta.phone_number || '',
+    full_name: fullName,
+    role: (meta.role as UserRole) || 'RETAIL_CONSUMER',
+    preferred_language: (meta.preferred_language as PreferredLanguage) || 'hi',
+    aadhaar_hash: meta.aadhaar_hash,
+    upi_id: meta.upi_id,
+    created_at: supabaseUser.created_at || new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+};
+
+const getStoredUser = (): User | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem('agridirect_user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const initialStoredUser = getStoredUser();
+const initialStoredToken = typeof window !== 'undefined' ? localStorage.getItem('agridirect_token') : null;
+
 export const useAgriStore = create<AgriStore>((set, get) => ({
-  currentUser: DEFAULT_PERSONA_USER,
-  currentRole: 'FARMER',
-  language: 'mr',
-  token: typeof window !== 'undefined' ? localStorage.getItem('agridirect_token') : null,
-  isAuthenticated: false,
+  currentUser: initialStoredUser || DEFAULT_PERSONA_USER,
+  currentRole: initialStoredUser?.role || 'FARMER',
+  language: initialStoredUser?.preferred_language || 'mr',
+  token: initialStoredToken,
+  isAuthenticated: Boolean(initialStoredUser && initialStoredToken),
   isAuthLoading: true,
 
   initSupabaseAuth: async () => {
@@ -80,31 +115,55 @@ export const useAgriStore = create<AgriStore>((set, get) => ({
     try {
       const session = await AuthService.getSession();
       if (session?.user) {
-        let profile = await ProfileService.getProfile(session.user.id);
+        let profile: User | null = null;
+        try {
+          profile = await ProfileService.getProfile(session.user.id);
+          if (!profile) {
+            profile = await ProfileService.upsertProfile({
+              id: session.user.id,
+              email: session.user.email || '',
+              full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+              role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
+              phone_number: session.user.user_metadata?.phone_number,
+              preferred_language: 'hi',
+            });
+          }
+        } catch (err) {
+          console.warn('[useAgriStore] ProfileService lookup/upsert error, fallback to session metadata:', err);
+        }
+
+        // Guaranteed fallback: If database tables or RLS failed, use session.user metadata
         if (!profile) {
-          profile = await ProfileService.upsertProfile({
-            id: session.user.id,
-            email: session.user.email || '',
-            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
-            role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
-            phone_number: session.user.user_metadata?.phone_number,
-            preferred_language: 'hi',
-          });
+          profile = buildUserFromSession(session.user);
         }
-        if (profile) {
-          api.setToken(session.access_token);
-          set({
-            currentUser: profile,
-            currentRole: profile.role,
-            token: session.access_token,
-            isAuthenticated: true,
-            language: profile.preferred_language || 'hi',
-            isAuthLoading: false,
-          });
-          return;
+
+        api.setToken(session.access_token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('agridirect_token', session.access_token);
+          localStorage.setItem('agridirect_user', JSON.stringify(profile));
         }
+        set({
+          currentUser: profile,
+          currentRole: profile.role,
+          token: session.access_token,
+          isAuthenticated: true,
+          language: profile.preferred_language || 'hi',
+          isAuthLoading: false,
+        });
+        return;
+      } else {
+        // No active session in Supabase: clear stale localStorage
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('agridirect_token');
+          localStorage.removeItem('agridirect_user');
+        }
+        set({
+          isAuthenticated: false,
+          token: null,
+          currentUser: DEFAULT_PERSONA_USER,
+          isAuthLoading: false,
+        });
       }
-      set({ isAuthLoading: false });
     } catch (err) {
       console.warn('[useAgriStore] Auth initialization skipped:', err);
       set({ isAuthLoading: false });
@@ -113,33 +172,51 @@ export const useAgriStore = create<AgriStore>((set, get) => ({
     // Subscribe to auth state changes (sign in, sign out, token refresh)
     AuthService.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
-        let profile = await ProfileService.getProfile(session.user.id);
+        let profile: User | null = null;
+        try {
+          profile = await ProfileService.getProfile(session.user.id);
+          if (!profile) {
+            profile = await ProfileService.upsertProfile({
+              id: session.user.id,
+              email: session.user.email || '',
+              full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+              role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
+              phone_number: session.user.user_metadata?.phone_number,
+              preferred_language: 'hi',
+            });
+          }
+        } catch (err) {
+          console.warn('[onAuthStateChange] ProfileService error, fallback to session metadata:', err);
+        }
+
         if (!profile) {
-          profile = await ProfileService.upsertProfile({
-            id: session.user.id,
-            email: session.user.email || '',
-            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
-            role: (session.user.user_metadata?.role as UserRole) || 'RETAIL_CONSUMER',
-            phone_number: session.user.user_metadata?.phone_number,
-            preferred_language: 'hi',
-          });
+          profile = buildUserFromSession(session.user);
         }
-        if (profile) {
-          api.setToken(session.access_token);
-          set({
-            currentUser: profile,
-            currentRole: profile.role,
-            token: session.access_token,
-            isAuthenticated: true,
-          });
+
+        api.setToken(session.access_token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('agridirect_token', session.access_token);
+          localStorage.setItem('agridirect_user', JSON.stringify(profile));
         }
-      } else if (!session && get().isAuthenticated) {
+        set({
+          currentUser: profile,
+          currentRole: profile.role,
+          token: session.access_token,
+          isAuthenticated: true,
+          isAuthLoading: false,
+        });
+      } else if (!session) {
         api.setToken(null);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('agridirect_token');
+          localStorage.removeItem('agridirect_user');
+        }
         set({
           currentUser: DEFAULT_PERSONA_USER,
           currentRole: 'FARMER',
           token: null,
           isAuthenticated: false,
+          isAuthLoading: false,
         });
       }
     });
@@ -148,6 +225,12 @@ export const useAgriStore = create<AgriStore>((set, get) => ({
   setAuthenticatedUser: (user: User, token?: string) => {
     if (token) {
       api.setToken(token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('agridirect_token', token);
+      }
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('agridirect_user', JSON.stringify(user));
     }
     set({
       currentUser: user,
@@ -155,18 +238,24 @@ export const useAgriStore = create<AgriStore>((set, get) => ({
       token: token || null,
       isAuthenticated: true,
       language: user.preferred_language || get().language,
+      isAuthLoading: false,
     });
   },
 
   logout: async () => {
     await AuthService.signOut();
     api.setToken(null);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('agridirect_token');
+      localStorage.removeItem('agridirect_user');
+    }
     set({
       currentUser: DEFAULT_PERSONA_USER,
       currentRole: 'FARMER',
       token: null,
       isAuthenticated: false,
       cart: [],
+      isAuthLoading: false,
     });
     get().showToast('Signed out successfully. Switched to visitor mode.', 'info');
   },
