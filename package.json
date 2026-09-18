@@ -1,0 +1,21 @@
+{
+  "name": "agridirect",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Direct Kisan-to-Grahak PWA and Disintermediation Grid with AI Logistics and Transparent Pricing",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build": "npm --prefix server run build && npm --prefix client run build",
+    "start": "npm --prefix server run start",
+    "test": "npm --prefix server test && npm --prefix client test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

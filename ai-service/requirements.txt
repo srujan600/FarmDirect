@@ -1,0 +1,5 @@
+fastapi>=0.115.0
+uvicorn>=0.32.0
+pydantic>=2.10.0
+ortools>=9.11.4210
+numpy>=2.1.0

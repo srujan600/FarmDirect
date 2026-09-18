@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+  }
+  .material-symbols-outlined.fill-current {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@layer components {
+  /* ==========================================================================
+     PHASE 2 DESIGN SYSTEM: BUTTONS & INTERACTIVE CONTROLS
+     ========================================================================== */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 min-h-[48px] px-5 py-2.5 rounded-xl text-xs font-bold font-sans transition-all duration-150 select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none active:scale-[0.98] whitespace-nowrap;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary text-on-primary hover:bg-primary-container shadow-sm focus-visible:ring-primary;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary text-on-secondary hover:bg-secondary/90 shadow-sm focus-visible:ring-secondary;
+  }
+
+  .btn-accent {
+    @apply btn bg-tertiary-container text-surface-container-lowest hover:bg-on-tertiary-fixed-variant shadow-sm focus-visible:ring-tertiary-container;
+  }
+
+  .btn-outline {
+    @apply btn bg-surface-container-lowest text-on-surface border border-outline-variant hover:bg-surface-container hover:border-outline shadow-sm focus-visible:ring-primary;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-on-surface hover:bg-surface-container hover:text-primary focus-visible:ring-primary;
+  }
+
+  .btn-icon {
+    @apply inline-flex items-center justify-center min-w-[48px] min-h-[48px] w-12 h-12 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none select-none cursor-pointer shrink-0;
+  }
+
+  .btn-sm {
+    @apply min-h-[40px] px-3.5 py-1.5 text-xs rounded-lg;
+  }
+
+  .btn-pill {
+    @apply rounded-full;
+  }
+
+  /* ==========================================================================
+     PHASE 2 DESIGN SYSTEM: FORM INPUTS & CONTROLS
+     ========================================================================== */
+  .input-base {
+    @apply w-full min-h-[48px] px-4 py-2.5 rounded-xl bg-surface-container-lowest text-on-surface border border-outline-variant placeholder:text-outline/70 text-sm font-medium transition-all duration-150 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none disabled:bg-surface-container disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .input-error {
+    @apply border-error focus:border-error focus:ring-error/20 text-error placeholder:text-error/60;
+  }
+
+  .select-base {
+    @apply w-full min-h-[48px] px-4 py-2.5 rounded-xl bg-surface-container-lowest text-on-surface border border-outline-variant text-sm font-medium transition-all duration-150 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none disabled:bg-surface-container disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer;
+  }
+
+  /* Sliders with accessible 44px+ touch height */
+  .range-slider {
+    @apply w-full min-h-[44px] h-11 py-3 cursor-pointer accent-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 rounded-lg;
+  }
+
+  /* ==========================================================================
+     PHASE 3 DESIGN SYSTEM: STITCH CHIPS, BADGES & ELEVATION
+     ========================================================================== */
+  .badge-verified {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] font-bold bg-[#DCFCE7] border border-[#86EFAC] text-[#14532D] shadow-sm;
+  }
+
+  .badge-escrow {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] font-bold bg-[#FEF3C7] border border-[#FDE68A] text-[#92400E] shadow-sm;
+  }
+
+  .badge-transit {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] font-bold bg-[#E0F2FE] border border-[#BAE6FD] text-[#075985] shadow-sm;
+  }
+
+  .card-elevation-1 {
+    @apply bg-surface-container-lowest border border-outline-variant/60 shadow-elevation-1 rounded-2xl transition-all;
+  }
+
+  .card-elevation-2 {
+    @apply bg-surface-container-lowest border border-outline-variant/70 shadow-elevation-2 rounded-2xl transition-all;
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full;
+  }
+
+  .section-padding {
+    @apply py-14 sm:py-16 md:py-20 lg:py-24;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.92); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes soundwave {
+  0%, 100% { height: 6px; }
+  50% { height: 26px; }
+}
+
+.wave-bar:nth-child(1) { animation: soundwave 1.2s infinite ease-in-out 0.1s; }
+.wave-bar:nth-child(2) { animation: soundwave 1.0s infinite ease-in-out 0.3s; }
+.wave-bar:nth-child(3) { animation: soundwave 0.8s infinite ease-in-out 0.2s; }
+.wave-bar:nth-child(4) { animation: soundwave 1.3s infinite ease-in-out 0.4s; }
+.wave-bar:nth-child(5) { animation: soundwave 0.9s infinite ease-in-out 0.15s; }
+.wave-bar:nth-child(6) { animation: soundwave 1.1s infinite ease-in-out 0.35s; }
+
+/* Custom scrollbars */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
