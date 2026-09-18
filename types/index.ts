@@ -414,32 +414,35 @@ export interface LanguageMeta {
   script: string;      // Script family
   bhashiniCode: string;
   samplePhrase: string;
+  direction: 'ltr' | 'rtl';
+  speechRecognitionCode?: string;
+  ttsCode?: string;
 }
 
 export const SUPPORTED_LANGUAGES: Record<PreferredLanguage, LanguageMeta> = {
-  hi: { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', script: 'Devanagari', bhashiniCode: 'hi', samplePhrase: '१० क्विंटल गेहूं ₹२२ प्रति किलो' },
-  mr: { code: 'mr', name: 'Marathi', nativeName: 'मराठी', script: 'Devanagari', bhashiniCode: 'mr', samplePhrase: '१० क्विंटल गावरान टोमॅटो, ३५ रुपये किलो' },
-  te: { code: 'te', name: 'Telugu', nativeName: 'తెలుగు', script: 'Telugu', bhashiniCode: 'te', samplePhrase: '10 క్వింటాళ్ల టమోటాలు కేజీ 35 రూపాయలు' },
-  ta: { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', script: 'Tamil', bhashiniCode: 'ta', samplePhrase: '10 குவிண்டால் தக்காளி கிலோ ₹30' },
-  kn: { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', script: 'Kannada', bhashiniCode: 'kn', samplePhrase: '10 ಕ್ವಿಂಟಾಲ್ ಟೊಮೆಟೊ, ಕೆಜಿಗೆ 35 ರೂಪಾಯಿ' },
-  bn: { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', script: 'Bengali', bhashiniCode: 'bn', samplePhrase: '৫ কুইন্টাল আলু প্রতি কেজি ২০ টাকা' },
-  gu: { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી', script: 'Gujarati', bhashiniCode: 'gu', samplePhrase: '૫ મણ કપાસ ૬૫ રૂપિયા કિલો' },
-  pa: { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ', script: 'Gurmukhi', bhashiniCode: 'pa', samplePhrase: '੨੦ ਕੁਇੰਟਲ ਬਾਸਮਤੀ ਝੋਨਾ ੩੫ ਰੁਪਏ ਕਿਲੋ' },
-  or: { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ', script: 'Odia', bhashiniCode: 'or', samplePhrase: '୫ କ୍ୱିଣ୍ଟାଲ ଧାନ କିଲୋ ₹୨୨' },
-  ml: { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം', script: 'Malayalam', bhashiniCode: 'ml', samplePhrase: '100 കിലോ നാടൻ കുരുമുളക്' },
-  as: { code: 'as', name: 'Assamese', nativeName: 'অসমীয়া', script: 'Bengali-Assamese', bhashiniCode: 'as', samplePhrase: '৫ কুইন্টাল তেজপুৰীয়া আদা' },
-  mai: { code: 'mai', name: 'Maithili', nativeName: 'मैथिली', script: 'Devanagari', bhashiniCode: 'mai', samplePhrase: '१० क्विंटल मखाना ₹४५० प्रति किलो' },
-  sat: { code: 'sat', name: 'Santali', nativeName: 'ᱥᱟᱱᱛᱟᱲᱤ', script: 'Ol Chiki', bhashiniCode: 'sat', samplePhrase: '᱕ ᱠᱣᱤᱱᱴᱟᱞ ᱦᱳᱲᱳ' },
-  ur: { code: 'ur', name: 'Urdu', nativeName: 'اردو', script: 'Perso-Arabic', bhashiniCode: 'ur', samplePhrase: 'دس کوئنٹل سیب پچاس روپے کلو' },
-  ks: { code: 'ks', name: 'Kashmiri', nativeName: 'کٲشُر', script: 'Perso-Arabic', bhashiniCode: 'ks', samplePhrase: 'پانژ دَبہٕ کۄنگ زعفران' },
-  ne: { code: 'ne', name: 'Nepali', nativeName: 'नेपाली', script: 'Devanagari', bhashiniCode: 'ne', samplePhrase: '१० बोरा अलैँची ₹८०० प्रति किलो' },
-  kok: { code: 'kok', name: 'Konkani', nativeName: 'कोंकणी', script: 'Devanagari', bhashiniCode: 'kok', samplePhrase: '५०० नारळ २५ रुपयांक एक' },
-  sd: { code: 'sd', name: 'Sindhi', nativeName: 'سنڌي', script: 'Perso-Arabic', bhashiniCode: 'sd', samplePhrase: 'ڏھ ڪوئينٽل ڪڻڪ' },
-  doi: { code: 'doi', name: 'Dogri', nativeName: 'डोगरी', script: 'Devanagari', bhashiniCode: 'doi', samplePhrase: '१० क्विंटल बासमती चावल' },
-  mni: { code: 'mni', name: 'Manipuri', nativeName: 'মৈতৈলোন্', script: 'Meetei Mayek', bhashiniCode: 'mni', samplePhrase: 'চাক-হাও চেং ৫০ কিলো' },
-  brx: { code: 'brx', name: 'Bodo', nativeName: 'बड़ो', script: 'Devanagari', bhashiniCode: 'brx', samplePhrase: '५ कुइन्टल माइ' },
-  sa: { code: 'sa', name: 'Sanskrit', nativeName: 'संस्कृतम्', script: 'Devanagari', bhashiniCode: 'sa', samplePhrase: 'दश क्विण्टल परिमितं धान्यम्' },
-  en: { code: 'en', name: 'English', nativeName: 'English', script: 'Latin', bhashiniCode: 'en', samplePhrase: '10 quintals of organic wheat at ₹22/kg' },
+  hi: { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', script: 'Devanagari', bhashiniCode: 'hi', direction: 'ltr', speechRecognitionCode: 'hi-IN', ttsCode: 'hi-IN', samplePhrase: '१० क्विंटल गेहूं ₹२२ प्रति किलो' },
+  mr: { code: 'mr', name: 'Marathi', nativeName: 'मराठी', script: 'Devanagari', bhashiniCode: 'mr', direction: 'ltr', speechRecognitionCode: 'mr-IN', ttsCode: 'mr-IN', samplePhrase: '१० क्विंटल गावरान टोमॅटो, ३५ रुपये किलो' },
+  te: { code: 'te', name: 'Telugu', nativeName: 'తెలుగు', script: 'Telugu', bhashiniCode: 'te', direction: 'ltr', speechRecognitionCode: 'te-IN', ttsCode: 'te-IN', samplePhrase: '10 క్వింటాళ్ల టమోటాలు కేజీ 35 రూపాయలు' },
+  ta: { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', script: 'Tamil', bhashiniCode: 'ta', direction: 'ltr', speechRecognitionCode: 'ta-IN', ttsCode: 'ta-IN', samplePhrase: '10 குவிண்டால் தக்காளி கிலோ ₹30' },
+  kn: { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', script: 'Kannada', bhashiniCode: 'kn', direction: 'ltr', speechRecognitionCode: 'kn-IN', ttsCode: 'kn-IN', samplePhrase: '10 ಕ್ವಿಂಟಾಲ್ ಟೊಮೆಟೊ, ಕೆಜಿಗೆ 35 ರೂಪಾಯಿ' },
+  bn: { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', script: 'Bengali', bhashiniCode: 'bn', direction: 'ltr', speechRecognitionCode: 'bn-IN', ttsCode: 'bn-IN', samplePhrase: '৫ কুইন্টাল আলু প্রতি কেজি ২০ টাকা' },
+  gu: { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી', script: 'Gujarati', bhashiniCode: 'gu', direction: 'ltr', speechRecognitionCode: 'gu-IN', ttsCode: 'gu-IN', samplePhrase: '૫ મણ કપાસ ૬૫ રૂપિયા કિલો' },
+  pa: { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ', script: 'Gurmukhi', bhashiniCode: 'pa', direction: 'ltr', speechRecognitionCode: 'pa-IN', ttsCode: 'pa-IN', samplePhrase: '੨੦ ਕੁਇੰਟਲ ਬਾਸਮਤੀ ਝੋਨਾ ੩੫ ਰੁਪਏ ਕਿਲੋ' },
+  or: { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ', script: 'Odia', bhashiniCode: 'or', direction: 'ltr', speechRecognitionCode: 'or-IN', ttsCode: 'or-IN', samplePhrase: '୫ କ୍ୱିଣ୍ଟାଲ ଧାନ କିଲୋ ₹୨୨' },
+  ml: { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം', script: 'Malayalam', bhashiniCode: 'ml', direction: 'ltr', speechRecognitionCode: 'ml-IN', ttsCode: 'ml-IN', samplePhrase: '100 കിലോ നാടൻ കുരുമുളക്' },
+  as: { code: 'as', name: 'Assamese', nativeName: 'অসমীয়া', script: 'Bengali-Assamese', bhashiniCode: 'as', direction: 'ltr', speechRecognitionCode: 'as-IN', ttsCode: 'as-IN', samplePhrase: '৫ কুইন্টাল তেজপুৰীয়া আদা' },
+  mai: { code: 'mai', name: 'Maithili', nativeName: 'मैथिली', script: 'Devanagari', bhashiniCode: 'mai', direction: 'ltr', speechRecognitionCode: 'mai-IN', ttsCode: 'mai-IN', samplePhrase: '१० क्विंटल मखाना ₹४५० प्रति किलो' },
+  sat: { code: 'sat', name: 'Santali', nativeName: 'ᱥᱟᱱᱛᱟᱲᱤ', script: 'Ol Chiki', bhashiniCode: 'sat', direction: 'ltr', speechRecognitionCode: 'sat-IN', ttsCode: 'sat-IN', samplePhrase: '᱕ ᱠᱣᱤᱱᱴᱟᱞ ᱦᱳᱲᱳ' },
+  ur: { code: 'ur', name: 'Urdu', nativeName: 'اردو', script: 'Perso-Arabic', bhashiniCode: 'ur', direction: 'rtl', speechRecognitionCode: 'ur-IN', ttsCode: 'ur-IN', samplePhrase: 'دس کوئنٹل سیب پچاس روپے کلو' },
+  ks: { code: 'ks', name: 'Kashmiri', nativeName: 'کٲشُر', script: 'Perso-Arabic', bhashiniCode: 'ks', direction: 'rtl', speechRecognitionCode: 'ks-IN', ttsCode: 'ks-IN', samplePhrase: 'پانژ دَبہٕ کۄنگ زعفران' },
+  ne: { code: 'ne', name: 'Nepali', nativeName: 'नेपाली', script: 'Devanagari', bhashiniCode: 'ne', direction: 'ltr', speechRecognitionCode: 'ne-NP', ttsCode: 'ne-NP', samplePhrase: '१० बोरा अलैँची ₹८०० प्रति किलो' },
+  kok: { code: 'kok', name: 'Konkani', nativeName: 'कोंकणी', script: 'Devanagari', bhashiniCode: 'kok', direction: 'ltr', speechRecognitionCode: 'kok-IN', ttsCode: 'kok-IN', samplePhrase: '५०० नारळ २५ रुपयांक एक' },
+  sd: { code: 'sd', name: 'Sindhi', nativeName: 'سنڌي', script: 'Perso-Arabic', bhashiniCode: 'sd', direction: 'rtl', speechRecognitionCode: 'sd-IN', ttsCode: 'sd-IN', samplePhrase: 'ڏھ ڪوئينٽل ڪڻڪ' },
+  doi: { code: 'doi', name: 'Dogri', nativeName: 'डोगरी', script: 'Devanagari', bhashiniCode: 'doi', direction: 'ltr', speechRecognitionCode: 'doi-IN', ttsCode: 'doi-IN', samplePhrase: '१० क्विंटल बासमती चावल' },
+  mni: { code: 'mni', name: 'Manipuri', nativeName: 'মৈতৈলোন্', script: 'Meetei Mayek', bhashiniCode: 'mni', direction: 'ltr', speechRecognitionCode: 'mni-IN', ttsCode: 'mni-IN', samplePhrase: 'চাক-হাও চেং ৫০ কিলো' },
+  brx: { code: 'brx', name: 'Bodo', nativeName: 'बड़ो', script: 'Devanagari', bhashiniCode: 'brx', direction: 'ltr', speechRecognitionCode: 'brx-IN', ttsCode: 'brx-IN', samplePhrase: '५ कुइन्टल माइ' },
+  sa: { code: 'sa', name: 'Sanskrit', nativeName: 'संस्कृतम्', script: 'Devanagari', bhashiniCode: 'sa', direction: 'ltr', speechRecognitionCode: 'sa-IN', ttsCode: 'sa-IN', samplePhrase: 'दश क्विण्टल परिमितं धान्यम्' },
+  en: { code: 'en', name: 'English', nativeName: 'English', script: 'Latin', bhashiniCode: 'en', direction: 'ltr', speechRecognitionCode: 'en-IN', ttsCode: 'en-IN', samplePhrase: '10 quintals of organic wheat at ₹22/kg' },
 };
 
 export interface ExtractedHarvestIntent {
@@ -479,6 +482,28 @@ export interface VoiceSynthesizeResponse {
   audioBase64: string;
   mimeType: string;
   durationEstimateMs: number;
+}
+
+export interface AssistantChatMessage {
+  sender: 'user' | 'assistant';
+  text: string;
+}
+
+export interface AssistantChatRequest {
+  message: string;
+  language: PreferredLanguage;
+  history?: AssistantChatMessage[];
+  context?: Record<string, any>;
+  synthesizeSpeech?: boolean;
+}
+
+export interface AssistantChatResponse {
+  reply: string;
+  language: PreferredLanguage;
+  intent: 'MANDI_RATES' | 'ESCROW_PAYMENT' | 'COLD_CHAIN' | 'SELL_HARVEST' | 'DISINTERMEDIATION' | 'GENERAL_HELP';
+  suggestedPrompts: string[];
+  audioBase64?: string;
+  mimeType?: string;
 }
 
 // ==========================================

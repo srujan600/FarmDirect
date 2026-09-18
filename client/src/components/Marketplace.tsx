@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { useAgriStore } from '../context/useAgriStore';
+import { useTranslation } from '../context/useTranslation';
 import type { CropListing } from '@types';
 
 export const Marketplace: React.FC = () => {
   const { addToCart } = useAgriStore();
+  const { t } = useTranslation();
   const [listings, setListings] = useState<CropListing[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -41,23 +43,23 @@ export const Marketplace: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
           <span className="px-3 py-1 rounded-full bg-surface-container text-secondary text-label-sm font-label-sm font-bold uppercase tracking-wider">
-            Verified Farm Gate Lots
+            {t('marketplace.badge')}
           </span>
           <h2 className="text-headline-xl font-headline-xl text-primary mt-2">
-            Live Harvest Marketplace
+            {t('marketplace.title')}
           </h2>
           <p className="text-body-md text-on-surface-variant mt-1">
-            Every lot is backed by computer-vision moisture assays, verified harvest timestamps, and temperature-controlled lock slots.
+            {t('marketplace.subtitle')}
           </p>
         </div>
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
           {[
-            { label: 'All Crops', value: 'ALL' },
-            { label: 'Seasonal Fruits', value: 'FRUITS' },
-            { label: 'High-Yield Vegetables', value: 'VEGETABLES' },
-            { label: 'Pulses & Grains', value: 'PULSES' },
+            { label: t('marketplace.allCategories'), value: 'ALL' },
+            { label: t('marketplace.categoryFruits'), value: 'FRUITS' },
+            { label: t('marketplace.categoryVegetables'), value: 'VEGETABLES' },
+            { label: t('marketplace.categoryPulses'), value: 'PULSES' },
           ].map((tab) => (
             <button
               key={tab.value}
@@ -82,7 +84,7 @@ export const Marketplace: React.FC = () => {
           </span>
           <input
             type="text"
-            placeholder="Search verified crop (e.g. Tomato, Alphonso)..."
+            placeholder={t('marketplace.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full min-h-[48px] pl-11 pr-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface focus:ring-2 focus:ring-secondary/40 focus:border-secondary focus:outline-none text-xs sm:text-body-sm transition-all"
@@ -93,7 +95,7 @@ export const Marketplace: React.FC = () => {
           className="btn-secondary min-h-[48px] px-5 sm:px-6 rounded-xl text-xs sm:text-sm shrink-0"
         >
           <span className="material-symbols-outlined text-[18px]">search</span>
-          <span>Search</span>
+          <span>{t('common.search')}</span>
         </button>
       </form>
 
@@ -134,7 +136,7 @@ export const Marketplace: React.FC = () => {
                     </div>
                     <div>
                       <div className="text-label-md font-bold text-on-surface">
-                        {item.farmer?.full_name || 'Verified Kisan'}
+                        {item.farmer?.full_name || t('marketplace.verifiedFarmer')}
                       </div>
                       <div className="text-[11px] text-outline">
                         {item.pickup_location?.village_or_locality || 'Nashik Belt'} ({item.pickup_location?.district || 'Nashik'})
@@ -172,7 +174,7 @@ export const Marketplace: React.FC = () => {
                   {/* Quality Assay Telemetry */}
                   <div className="grid grid-cols-2 gap-2 py-2 px-3 rounded-lg bg-surface-container-low text-label-sm">
                     <div>
-                      <span className="text-outline text-[11px] block">Moisture Assay</span>
+                      <span className="text-outline text-[11px] block">{t('marketplace.moisture')}</span>
                       <span className="font-bold text-on-surface font-mono">
                         {item.quality_assay?.moisture_percentage ? `${item.quality_assay.moisture_percentage}%` : 'Optimal'}
                       </span>
@@ -195,7 +197,7 @@ export const Marketplace: React.FC = () => {
                     </div>
                     {item.mandi_benchmark_price && (
                       <div className="text-right">
-                        <span className="text-[11px] text-outline block">Mandi Benchmark</span>
+                        <span className="text-[11px] text-outline block">{t('marketplace.mandiRate')}</span>
                         <span className="text-label-sm text-error font-mono line-through">
                           ₹{item.mandi_benchmark_price.toFixed(2)}
                         </span>
@@ -212,7 +214,7 @@ export const Marketplace: React.FC = () => {
                   className="btn-primary w-full min-h-[48px] px-4 rounded-xl text-xs sm:text-label-sm"
                 >
                   <span className="material-symbols-outlined text-[18px]">shopping_basket</span>
-                  <span>Add to Cart (₹{item.price_per_kg_expected}/kg)</span>
+                  <span>{t('marketplace.addToCart')} (₹{item.price_per_kg_expected}/kg)</span>
                 </button>
               </div>
             </div>

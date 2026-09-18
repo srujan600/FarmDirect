@@ -133,4 +133,59 @@ describe('AgriDirect Vernacular Voice AI & Slot Normalization Test Suite', () =>
     assert.equal(body.data.mimeType, 'audio/wav');
     assert.ok(body.data.durationEstimateMs > 0);
   });
+
+  test('Integration: POST /api/v1/voice/assistant/chat processes Hindi mandi rate query with audio', async () => {
+    const res = await fetch(`${baseUrl}/api/v1/voice/assistant/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'टमाटर का मंडी भाव क्या है?',
+        language: 'hi',
+        synthesizeSpeech: true,
+      }),
+    });
+
+    assert.equal(res.status, 200);
+    const body = (await res.json()) as any;
+    assert.ok(body.data);
+    assert.equal(body.data.intent, 'MANDI_RATES');
+    assert.equal(body.data.language, 'hi');
+    assert.ok(body.data.reply.includes('नासिक मंडी'));
+    assert.ok(body.data.reply.includes('₹35.00'));
+    assert.ok(Array.isArray(body.data.suggestedPrompts));
+    assert.ok(body.data.suggestedPrompts.length > 0);
+    assert.ok(body.data.audioBase64, 'Must synthesize speech feedback');
+  });
+
+  test('Integration: POST /api/v1/voice/assistant/chat processes Marathi escrow inquiry', async () => {
+    const res = await fetch(`${baseUrl}/api/v1/voice/assistant/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'माझे पैसे एस्क्रोमध्ये सुरक्षित आहेत का?',
+        language: 'mr',
+      }),
+    });
+
+    assert.equal(res.status, 200);
+    const body = (await res.json()) as any;
+    assert.ok(body.data);
+    assert.equal(body.data.intent, 'ESCROW_PAYMENT');
+    assert.equal(body.data.language, 'mr');
+    assert.ok(body.data.reply.includes('एस्क्रो'));
+  });
+
+  test('Integration: POST /api/v1/voice/assistant/chat validates required message', async () => {
+    const res = await fetch(`${baseUrl}/api/v1/voice/assistant/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        language: 'te',
+      }),
+    });
+
+    assert.equal(res.status, 400);
+    const body = (await res.json()) as any;
+    assert.equal(body.error?.code, 'INVALID_MESSAGE');
+  });
 });

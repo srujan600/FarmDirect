@@ -23,6 +23,30 @@
   .material-symbols-outlined.fill-current {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
+
+  /* RTL Support for Urdu, Sindhi, and Kashmiri */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="rtl"] .text-left {
+    text-align: right;
+  }
+
+  [dir="rtl"] .text-right {
+    text-align: left;
+  }
+
+  /* Directional Icons Flipping (arrows, chevrons) without mirroring currency/brand icons */
+  [dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
+  }
+
+  /* Perso-Arabic font typography smoothing */
+  [lang="ur"], [lang="sd"], [lang="ks"] {
+    font-family: 'Inter', 'Segoe UI', 'Noto Nastaliq Urdu', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    letter-spacing: 0;
+  }
 }
 
 @layer components {

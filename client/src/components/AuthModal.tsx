@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AuthService, RegisterMetadata } from '../services/authService';
 import { ProfileService } from '../services/profileService';
 import { useAgriStore } from '../context/useAgriStore';
+import { t } from '../services/i18n';
 import type { UserRole, PreferredLanguage, User } from '@types';
 
 interface AuthModalProps {
@@ -15,7 +16,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   initialMode = 'login',
 }) => {
-  const { setAuthenticatedUser, showToast } = useAgriStore();
+  const { setAuthenticatedUser, showToast, language } = useAgriStore();
 
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [loginMethod, setLoginMethod] = useState<'password' | 'otp'>('password');
@@ -414,10 +415,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div>
               <h3 id="auth-modal-title" className="font-bold text-lg text-primary leading-tight">
                 {step === 'otp'
-                  ? 'Verify 6-Digit OTP'
+                  ? t('auth.verifyOtp', language)
                   : mode === 'login'
-                  ? loginMethod === 'password' ? 'Sign In with Password' : 'Sign In with Email OTP'
-                  : 'Register for AgriDirect'}
+                  ? t('auth.loginTitle', language)
+                  : t('auth.registerTitle', language)}
               </h3>
               <p className="text-xs text-on-surface-variant mt-0.5">
                 {step === 'otp'
@@ -453,7 +454,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   : 'border-transparent text-on-surface-variant hover:text-on-surface'
               }`}
             >
-              Sign In
+              {t('auth.submitLogin', language)}
             </button>
             <button
               type="button"
@@ -467,7 +468,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   : 'border-transparent text-on-surface-variant hover:text-on-surface'
               }`}
             >
-              Create Account
+              {t('auth.submitRegister', language)}
             </button>
           </div>
         )}
@@ -574,12 +575,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       {isLoading ? (
                         <>
                           <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                          <span>Signing In...</span>
+                          <span>{t('common.loading', language)}</span>
                         </>
                       ) : (
                         <>
-                          <span>Sign In with Password</span>
-                          <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                          <span>{t('auth.submitLogin', language)}</span>
+                          <span className="material-symbols-outlined text-[18px] rtl-flip">arrow_forward</span>
                         </>
                       )}
                     </button>
@@ -754,11 +755,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     {isLoading ? (
                       <>
                         <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                        <span>Creating Account...</span>
+                        <span>{t('common.loading', language)}</span>
                       </>
                     ) : (
                       <>
-                        <span>Create Account</span>
+                        <span>{t('auth.submitRegister', language)}</span>
                         <span className="material-symbols-outlined text-[18px]">person_add</span>
                       </>
                     )}
@@ -847,12 +848,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {isLoading ? (
                   <>
                     <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                    <span>Verifying Code...</span>
+                    <span>{t('common.loading', language)}</span>
                   </>
                 ) : (
                   <>
                     <span className="material-symbols-outlined text-[18px]">verified</span>
-                    <span>Verify &amp; Continue</span>
+                    <span>{t('auth.verifyOtp', language)}</span>
                   </>
                 )}
               </button>
@@ -872,7 +873,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     className="text-xs font-bold text-secondary hover:underline cursor-pointer inline-flex items-center gap-1"
                   >
                     <span className="material-symbols-outlined text-[16px]">refresh</span>
-                    <span>Didn't receive code? Resend OTP</span>
+                    <span>{t('auth.resendOtp', language)}</span>
                   </button>
                 )}
               </div>

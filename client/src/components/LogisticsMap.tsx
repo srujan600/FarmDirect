@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import type { LogisticsTrip } from '@types';
 import { useAgriStore } from '../context/useAgriStore';
+import { useTranslation } from '../context/useTranslation';
 
 export const LogisticsMap: React.FC = () => {
   const { showToast } = useAgriStore();
+  const { t } = useTranslation();
   const [activeTrip, setActiveTrip] = useState<LogisticsTrip | null>(null);
   const [loading, setLoading] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
@@ -132,10 +134,10 @@ export const LogisticsMap: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-3 sm:gap-4">
             <div>
               <span className="badge-verified">
-                <span className="material-symbols-outlined text-[14px] fill-current">route</span> Capacitated Vehicle Routing (CVRPTW)
+                <span className="material-symbols-outlined text-[14px] fill-current">route</span> {t('logistics.badge')}
               </span>
               <h2 className="text-xl sm:text-2xl md:text-headline-lg font-headline-lg text-primary mt-2 leading-tight">
-                Active Cold Aggregation Fleet &amp; Route Telemetry
+                {t('logistics.title')}
               </h2>
             </div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">

@@ -1,8 +1,10 @@
 import React from 'react';
 import { useAgriStore } from '../context/useAgriStore';
+import { useTranslation } from '../context/useTranslation';
 
 export const B2BContracts: React.FC = () => {
   const { showToast } = useAgriStore();
+  const { t } = useTranslation();
 
   const handleContractReserve = (crop: string, lotId: string) => {
     showToast(`Initiated 30% advance escrow lock for ${crop} (${lotId})`, 'success');
@@ -13,13 +15,13 @@ export const B2BContracts: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
           <span className="badge-verified">
-            <span className="material-symbols-outlined text-[14px] fill-current">apartment</span> Enterprise &amp; HoReCa Grid
+            <span className="material-symbols-outlined text-[14px] fill-current">apartment</span> {t('contracts.badge')}
           </span>
           <h2 className="text-headline-xl font-headline-xl text-primary mt-2">
-            Institutional Procurement &amp; Forward Contracts
+            {t('contracts.title')}
           </h2>
           <p className="text-body-md text-on-surface-variant mt-1">
-            Lock guaranteed supply for retail chains, hotels, and cloud kitchens with Smart Settlement Escrow and volume tier discounts.
+            {t('contracts.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-2">

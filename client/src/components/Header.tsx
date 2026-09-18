@@ -197,37 +197,37 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
               className="text-secondary font-bold pb-1 border-b-2 border-secondary transition-colors"
               href="#marketplace"
             >
-              {t('marketplace', language)}
+              {t('nav.marketplace', language)}
             </a>
             <a
               className="text-on-surface-variant hover:text-on-surface pb-1 transition-colors"
               href="#disintermediation"
             >
-              Disintermediation
+              {t('grid.title', language)}
             </a>
             <a
               className="text-on-surface-variant hover:text-on-surface pb-1 transition-colors"
               href="#pricing-model"
             >
-              Pricing Model
+              {t('calculator.title', language)}
             </a>
             <a
               className="text-on-surface-variant hover:text-on-surface pb-1 transition-colors"
               href="#demand-forecast"
             >
-              Forecasting
+              {t('nav.aiForecast', language)}
             </a>
             <a
               className="text-on-surface-variant hover:text-on-surface pb-1 transition-colors"
               href="#logistics-map"
             >
-              Logistics
+              {t('nav.coldLogistics', language)}
             </a>
             <a
               className="text-on-surface-variant hover:text-on-surface pb-1 transition-colors"
               href="#b2b-contracts"
             >
-              B2B
+              {t('nav.b2bContracts', language)}
             </a>
           </div>
 
@@ -279,7 +279,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
             <button
               onClick={onOpenCart}
               className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl text-on-surface-variant hover:bg-surface-container-low relative active:scale-95 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shrink-0 select-none cursor-pointer"
-              title="View Cart"
+              title={t('nav.cart', language)}
               type="button"
             >
               <span className="material-symbols-outlined text-[20px]">shopping_cart</span>
@@ -296,11 +296,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
               className="hidden lg:inline-flex items-center justify-center gap-1.5 h-9 sm:h-10 px-3 sm:px-3.5 rounded-xl bg-tertiary-container hover:bg-on-tertiary-fixed-variant text-surface-container-lowest font-label-sm font-bold shadow-sm transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tertiary-container shrink-0 select-none cursor-pointer text-xs"
             >
               <span className="material-symbols-outlined text-[17px]">agriculture</span>
-              <span className="hidden 2xl:inline">{t('sellHarvest', language)}</span>
-              <span className="2xl:hidden">Sell Harvest</span>
+              <span className="hidden 2xl:inline">{t('nav.sellHarvest', language)}</span>
+              <span className="2xl:hidden">{t('nav.sellHarvest', language).split('(')[0]}</span>
             </button>
 
-            {/* User Auth Status / Trigger (ALWAYS VISIBLE & PROMINENT) */}
+            {/* User Auth Status / Trigger */}
             {isAuthenticated ? (
               <div className="flex items-center gap-2 pl-2 pr-2 py-1 rounded-xl bg-surface-container border border-outline-variant text-xs shadow-sm shrink-0 animate-fadeIn">
                 <div className="w-7 h-7 rounded-lg bg-primary text-secondary-fixed flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
@@ -312,7 +312,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
                 </div>
                 <button
                   onClick={logout}
-                  title="Sign Out"
+                  title={t('nav.logout', language)}
                   type="button"
                   className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-error-container hover:text-error text-on-surface-variant transition-colors cursor-pointer"
                 >
@@ -322,17 +322,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
             ) : isAuthLoading ? (
               <div className="flex items-center justify-center h-9 sm:h-10 px-3 rounded-xl bg-surface-container-low border border-outline-variant text-xs text-on-surface-variant shrink-0">
                 <span className="material-symbols-outlined text-[16px] animate-spin mr-1.5">progress_activity</span>
-                <span className="text-[11px] font-medium">Checking...</span>
+                <span className="text-[11px] font-medium">{t('common.loading', language)}</span>
               </div>
             ) : (
               <button
                 onClick={onOpenAuth}
                 type="button"
                 className="inline-flex items-center justify-center gap-1.5 h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-sm font-bold shadow-sm transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shrink-0 text-xs select-none cursor-pointer whitespace-nowrap"
-                title="Sign In"
+                title={t('nav.login', language)}
               >
                 <span className="material-symbols-outlined text-[16px]">lock</span>
-                <span>Sign In</span>
+                <span>{t('nav.login', language)}</span>
               </button>
             )}
 
@@ -341,8 +341,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSellHarvest, onOpenCart, o
               href="#portal-sandbox"
               className="hidden 2xl:inline-flex items-center justify-center gap-1.5 h-9 sm:h-10 px-3 py-1.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-sm font-bold shadow-sm transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shrink-0 text-xs select-none"
             >
-              <span>Portals</span>
-              <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+              <span>{t('nav.sandbox', language)}</span>
+              <span className="material-symbols-outlined text-[14px] rtl-flip">arrow_forward</span>
             </a>
           </div>
         </nav>

@@ -95,13 +95,27 @@ const getStoredUser = (): User | null => {
   }
 };
 
+import { getStoredLanguage, persistLanguage, applyDocumentLanguage } from '../services/i18n';
+import { SUPPORTED_LANGUAGES } from '@types';
+
 const initialStoredUser = getStoredUser();
 const initialStoredToken = typeof window !== 'undefined' ? localStorage.getItem('agridirect_token') : null;
+
+const initialLanguage: PreferredLanguage = (() => {
+  const stored = getStoredLanguage();
+  if (stored) {
+    applyDocumentLanguage(stored);
+    return stored;
+  }
+  const lang = initialStoredUser?.preferred_language || 'hi';
+  applyDocumentLanguage(lang);
+  return lang;
+})();
 
 export const useAgriStore = create<AgriStore>((set, get) => ({
   currentUser: initialStoredUser || DEFAULT_PERSONA_USER,
   currentRole: initialStoredUser?.role || 'FARMER',
-  language: initialStoredUser?.preferred_language || 'mr',
+  language: initialLanguage,
   token: initialStoredToken,
   isAuthenticated: Boolean(initialStoredUser && initialStoredToken),
   isAuthLoading: true,
@@ -290,8 +304,20 @@ export const useAgriStore = create<AgriStore>((set, get) => ({
   },
 
   setLanguage: (lang: PreferredLanguage) => {
+    persistLanguage(lang);
     set({ language: lang });
-    get().showToast(`Language updated to ${lang.toUpperCase()}`, 'info');
+
+    // Sync with Supabase profile in background if user is authenticated
+    const user = get().currentUser;
+    if (user?.id && isSupabaseConfigured) {
+      ProfileService.updateProfile(user.id, { preferred_language: lang }).catch((err) => {
+        console.warn('[useAgriStore] Failed to sync preferred_language to profile:', err);
+      });
+    }
+
+    const langMeta = SUPPORTED_LANGUAGES[lang];
+    const displayName = langMeta ? `${langMeta.nativeName} (${langMeta.name})` : lang.toUpperCase();
+    get().showToast(`🌐 Language: ${displayName}`, 'info');
   },
 
   cart: [],

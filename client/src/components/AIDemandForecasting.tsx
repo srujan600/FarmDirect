@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { useTranslation } from '../context/useTranslation';
 
 export const AIDemandForecasting: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedCrop, setSelectedCrop] = useState<'Tomato' | 'Onion' | 'Alphonso Mango'>('Tomato');
-  const [selectedDistrict, setSelectedDistrict] = useState<'Nashik' | 'Lasalgaon' | 'Pune' | 'Ratnagiri'>('Nashik');
-  const [loading, setLoading] = useState(false);
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('Nashik');
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Time series state with rich initial values matching Stitch
   const [timeSeries, setTimeSeries] = useState([
@@ -92,13 +94,13 @@ export const AIDemandForecasting: React.FC = () => {
     <section className="section-container section-padding" id="demand-forecast">
       <div className="text-center max-w-3xl mx-auto mb-10">
         <span className="px-3 py-1 rounded-full bg-surface-container text-secondary text-label-sm font-label-sm font-bold uppercase tracking-wider">
-          Predictive Agronomic Telemetry
+          {t('forecast.badge')}
         </span>
         <h2 className="text-headline-xl font-headline-xl text-primary mt-2">
-          AI Demand &amp; Supply Forecasting Engine
+          {t('forecast.title')}
         </h2>
         <p className="text-body-md text-on-surface-variant mt-2">
-          We synthesize historical wholesale cycles, IMD radar models, and urban consumption velocity to eliminate glut shocks.
+          {t('forecast.subtitle')}
         </p>
 
         {/* Commodity and District Quick Selectors */}

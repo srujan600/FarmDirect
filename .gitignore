@@ -1,16 +1,21 @@
 # Dependencies
 node_modules/
+**/node_modules/
 .pnp
 .pnp.js
 
 # Production build output
 dist/
+**/dist/
 build/
+**/build/
 coverage/
 .tsbuildinfo
+*.tsbuildinfo
 
-# Vite cache
+# Vite and bundler cache
 .vite/
+**/.vite/
 
 # Environment variables
 .env
@@ -25,6 +30,7 @@ coverage/
 
 # Python / AI microservice
 __pycache__/
+**/__pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
@@ -58,5 +64,14 @@ lerna-debug.log*
 # Database & temporary local files
 *.sqlite
 *.db
+*.db-journal
+*.db-wal
+*.db-shm
 tmp/
+**/tmp/
 scratch/
+**/scratch/
+
+# Agent / Tooling temporary output
+.system_generated/
+.gemini/

@@ -1,0 +1,254 @@
+/**
+ * AgriDirect Translation Schema Types
+ * Strongly typed internationalization resources for all 22 Indian languages + English
+ */
+
+export interface TranslationSchema {
+  nav: {
+    brand: string;
+    marketplace: string;
+    sellHarvest: string;
+    coldLogistics: string;
+    escrowLedger: string;
+    aiForecast: string;
+    b2bContracts: string;
+    provenance: string;
+    offlinePwa: string;
+    sandbox: string;
+    mandiBenchmark: string;
+    switchLanguage: string;
+    searchLanguage: string;
+    officialLanguagesCount: string;
+    officialLanguagesSubtitle: string;
+    cart: string;
+    login: string;
+    logout: string;
+    myProfile: string;
+    visitorMode: string;
+  };
+  hero: {
+    badge: string;
+    titleLine1: string;
+    titleLine2: string;
+    subtitle: string;
+    exploreBtn: string;
+    sellBtn: string;
+    calcBtn: string;
+    statFarmerRealization: string;
+    statFarmerRealizationLabel: string;
+    statDelivery: string;
+    statDeliveryLabel: string;
+    statSpoilage: string;
+    statSpoilageLabel: string;
+    statUpi: string;
+    statUpiLabel: string;
+  };
+  grid: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    traditionalMandi: string;
+    agriDirectGrid: string;
+    farmerRealization: string;
+    logisticsWaste: string;
+    middlemenMargin: string;
+    grahakPrice: string;
+    tier1: string;
+    tier2: string;
+    tier3: string;
+    tier4: string;
+    tier5: string;
+    tier6: string;
+    tier7: string;
+  };
+  calculator: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    cropSelect: string;
+    quantityKg: string;
+    farmerPrice: string;
+    mandiBenchmark: string;
+    totalFarmerRealization: string;
+    conventionalRealization: string;
+    farmerGain: string;
+    breakdownTitle: string;
+    farmerShare: string;
+    logisticsShare: string;
+    platformShare: string;
+  };
+  marketplace: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    searchPlaceholder: string;
+    allCategories: string;
+    categoryGrains: string;
+    categoryPulses: string;
+    categoryVegetables: string;
+    categoryFruits: string;
+    categoryOilseeds: string;
+    categorySpices: string;
+    addToCart: string;
+    minOrder: string;
+    available: string;
+    expectedPrice: string;
+    mandiRate: string;
+    organicCertified: string;
+    brix: string;
+    moisture: string;
+    verifiedFarmer: string;
+  };
+  forecast: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    selectCrop: string;
+    selectDistrict: string;
+    daysForecast: string;
+    predictedPrice: string;
+    advisory: string;
+    microclimateTitle: string;
+    temp: string;
+    humidity: string;
+    soilMoisture: string;
+  };
+  logistics: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    reeferTelemetry: string;
+    optimalTemp: string;
+    co2Saved: string;
+    vehicleType: string;
+    activeRoute: string;
+    stopsCompleted: string;
+  };
+  contracts: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    institutionalProcurement: string;
+    lockedPrice: string;
+    quantityVolume: string;
+    maturityDate: string;
+    bookContract: string;
+  };
+  provenance: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    enterHash: string;
+    verifyButton: string;
+    harvestStage: string;
+    hubStage: string;
+    transportStage: string;
+    deliveryStage: string;
+    immutableHash: string;
+  };
+  offline: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    statusOnline: string;
+    statusOffline: string;
+    pendingMutations: string;
+    syncQueueNow: string;
+  };
+  sandbox: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    activeRole: string;
+    switchRole: string;
+  };
+  footer: {
+    brandTagline: string;
+    allRightsReserved: string;
+    targetMinistry: string;
+    mandiBenchmarks: string;
+    coldChainTelemetry: string;
+    escrowSettlement: string;
+    pwaProtocols: string;
+    audioSdk: string;
+    privacyTraceability: string;
+  };
+  cart: {
+    title: string;
+    subtitle: string;
+    emptyBasket: string;
+    totalAmount: string;
+    farmerPayout: string;
+    logisticsFee: string;
+    platformFee: string;
+    checkoutBtn: string;
+    orderSuccess: string;
+    escrowNote: string;
+    closeBasket: string;
+  };
+  auth: {
+    loginTitle: string;
+    registerTitle: string;
+    emailLabel: string;
+    passwordLabel: string;
+    fullNameLabel: string;
+    phoneLabel: string;
+    roleLabel: string;
+    languageLabel: string;
+    otpLabel: string;
+    submitLogin: string;
+    submitRegister: string;
+    verifyOtp: string;
+    resendOtp: string;
+    switchToRegister: string;
+    switchToLogin: string;
+  };
+  farmerWizard: {
+    title: string;
+    subtitle: string;
+    speakOrType: string;
+    voiceListingGuide: string;
+    tapToSpeak: string;
+    listening: string;
+    cropDetected: string;
+    quantityParsed: string;
+    priceExpected: string;
+    confirmListing: string;
+  };
+  assistant: {
+    floatingLabel: string;
+    title: string;
+    statusOnline: string;
+    syncLanguage: string;
+    autoSpeak: string;
+    clearChat: string;
+    welcomeMessage: string;
+    inputPlaceholder: string;
+    listeningFeedback: string;
+    thinking: string;
+    speakResponse: string;
+    stopSpeaking: string;
+    quickPromptsLabel: string;
+    quickMandi: string;
+    quickSell: string;
+    quickEscrow: string;
+    quickLogistics: string;
+    errorState: string;
+    retry: string;
+  };
+  common: {
+    submit: string;
+    cancel: string;
+    close: string;
+    save: string;
+    loading: string;
+    error: string;
+    success: string;
+    retry: string;
+    search: string;
+    kg: string;
+    quintal: string;
+    rupeeSymbol: string;
+    perKg: string;
+  };
+}

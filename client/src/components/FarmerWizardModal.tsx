@@ -146,7 +146,7 @@ export const FarmerWizardModal: React.FC<FarmerWizardModalProps> = ({ isOpen, on
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1 bg-primary-container px-2 py-1 rounded text-secondary-fixed font-bold text-sm">
               <span className="material-symbols-outlined text-[18px]">agriculture</span>
-              <span>AgriDirect किसान PWA</span>
+              <span>AgriDirect {SUPPORTED_LANGUAGES[language]?.nativeName || 'Kisan'} PWA</span>
             </div>
             <span className="text-xs text-outline-variant hidden sm:inline">|</span>
             <span className="text-xs text-primary-fixed-dim hidden sm:inline">
@@ -155,12 +155,12 @@ export const FarmerWizardModal: React.FC<FarmerWizardModalProps> = ({ isOpen, on
           </div>
           <div className="flex items-center gap-2">
             <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${isOnline ? 'bg-secondary-container text-on-secondary-container' : 'bg-error-container text-on-error-container'}`}>
-              {isOnline ? '● Online' : '● Offline Vault Active'}
+              {isOnline ? `● ${t('offline.statusOnline', language)}` : `● ${t('offline.statusOffline', language)}`}
             </span>
             <button
               onClick={onClose}
               className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl hover:bg-primary-container flex items-center justify-center text-outline-variant hover:text-on-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary select-none cursor-pointer"
-              title="Close Dialog"
+              title={t('common.close', language)}
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -169,14 +169,14 @@ export const FarmerWizardModal: React.FC<FarmerWizardModalProps> = ({ isOpen, on
 
         {/* MODAL BODY */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1">
-          {/* Header with Marathi Vernacular Audio */}
+          {/* Header with Vernacular Audio */}
           <div className="flex items-center justify-between border-b border-outline-variant pb-3 gap-2">
             <div>
               <span className="px-2 py-0.5 bg-secondary-container text-on-secondary-container font-label-sm text-[10px] rounded uppercase font-bold tracking-wide">
-                45-Sec Smart Form
+                Smart Form
               </span>
               <h2 id="modal-harvest-title" className="text-headline-sm font-bold text-primary mt-1">
-                हंगाम नोंदणी · Fast Harvest Listing
+                {t('farmerWizard.title', language)}
               </h2>
             </div>
             <button
@@ -186,7 +186,7 @@ export const FarmerWizardModal: React.FC<FarmerWizardModalProps> = ({ isOpen, on
               title="Listen to summary audio in vernacular speech"
             >
               <span className="material-symbols-outlined text-secondary text-[18px]">volume_up</span>
-              <span>ऐका ({SUPPORTED_LANGUAGES[language]?.nativeName || 'मराठी'})</span>
+              <span>{SUPPORTED_LANGUAGES[language]?.nativeName || 'Audio'}</span>
             </button>
           </div>
 
@@ -217,7 +217,7 @@ export const FarmerWizardModal: React.FC<FarmerWizardModalProps> = ({ isOpen, on
                   {isProcessing ? 'sync' : isRecording ? 'stop' : 'mic'}
                 </span>
                 <span className="text-[10px] font-bold text-primary-fixed mt-0.5">
-                  {isProcessing ? 'AI' : isRecording ? 'थांबवा' : 'बोला'}
+                  {isProcessing ? 'AI' : isRecording ? 'STOP' : t('farmerWizard.tapToSpeak', language)}
                 </span>
               </button>
               {isRecording && (
@@ -533,8 +533,8 @@ export const FarmerWizardModal: React.FC<FarmerWizardModalProps> = ({ isOpen, on
             </span>
             <span>
               {isSubmitting
-                ? 'Processing...'
-                : `Publish Harvest to Grahak Grid · ₹${totalValue.toLocaleString('en-IN')}`}
+                ? t('common.loading', language)
+                : `${t('farmerWizard.confirmListing', language)} · ₹${totalValue.toLocaleString('en-IN')}`}
             </span>
           </button>
           <button
@@ -542,7 +542,7 @@ export const FarmerWizardModal: React.FC<FarmerWizardModalProps> = ({ isOpen, on
             onClick={onClose}
             className="btn-outline w-full sm:w-auto min-h-[48px] px-6 text-xs sm:text-sm font-bold"
           >
-            Cancel
+            {t('common.cancel', language)}
           </button>
         </div>
       </div>

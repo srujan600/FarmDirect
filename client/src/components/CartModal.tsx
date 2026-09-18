@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAgriStore } from '../context/useAgriStore';
+import { useTranslation } from '../context/useTranslation';
 import { api } from '../services/api';
 import type { Order } from '@types';
 
@@ -10,6 +11,7 @@ interface CartModalProps {
 
 export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, clearCart, showToast, currentUser } = useAgriStore();
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
 
@@ -26,7 +28,6 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const totalKg = cart.reduce((acc, item) => acc + item.quantity_kg, 0);
   const totalAmount = cart.reduce(
     (acc, item) => acc + item.listing.price_per_kg_expected * item.quantity_kg,
     0
@@ -71,14 +72,14 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-secondary-fixed text-2xl">shopping_cart</span>
             <div>
-              <h3 id="modal-cart-title" className="text-headline-sm font-bold leading-none">Your Direct Farm Basket</h3>
-              <p className="text-[10px] text-outline-variant mt-0.5">Sovereign Kisan-to-Grahak Escrow</p>
+              <h3 id="modal-cart-title" className="text-headline-sm font-bold leading-none">{t('cart.title')}</h3>
+              <p className="text-[10px] text-outline-variant mt-0.5">{t('cart.subtitle')}</p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl hover:bg-primary-container flex items-center justify-center text-outline-variant hover:text-on-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary select-none cursor-pointer"
-            title="Close Basket"
+            title={t('cart.closeBasket')}
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -90,19 +91,19 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
             <div className="w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mx-auto shadow-sm">
               <span className="material-symbols-outlined text-3xl">verified</span>
             </div>
-            <h4 className="text-headline-sm font-bold text-primary">Order &amp; Escrow Confirmed!</h4>
+            <h4 className="text-headline-sm font-bold text-primary">{t('cart.orderSuccess')}</h4>
             <p className="text-body-sm text-on-surface-variant">
-              Your farm order #{completedOrder.id.substring(0, 8)} has been locked in escrow. Cold Reefer pickup scheduled with farmer.
+              {t('cart.escrowNote')}
             </p>
 
             <div className="p-3.5 bg-surface-container-low rounded-xl border border-outline-variant text-left space-y-1.5 text-xs">
               <div className="flex justify-between font-bold text-primary">
-                <span>Total Amount Paid:</span>
+                <span>{t('cart.totalAmount')}:</span>
                 <span className="font-mono">₹{completedOrder.total_amount.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-secondary">
-                <span>Farmer Direct Share:</span>
-                <span className="font-mono">₹{completedOrder.farmer_unit_price * completedOrder.quantity_kg} (76%)</span>
+                <span>{t('cart.farmerPayout')}:</span>
+                <span className="font-mono">₹{(completedOrder.farmer_unit_price * completedOrder.quantity_kg).toFixed(2)} (76%)</span>
               </div>
               <div className="flex justify-between text-outline">
                 <span>Escrow Status:</span>
@@ -121,7 +122,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
               }}
               className="btn-primary w-full min-h-[48px] py-3 font-bold text-sm shadow-md"
             >
-              Continue Shopping
+              {t('common.close')}
             </button>
           </div>
         ) : (
@@ -130,7 +131,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
             {cart.length === 0 ? (
               <div className="text-center py-8 text-outline">
                 <span className="material-symbols-outlined text-4xl mb-1">remove_shopping_cart</span>
-                <p className="text-sm">Your basket is empty. Browse the fresh harvest marketplace!</p>
+                <p className="text-sm">{t('cart.emptyBasket')}</p>
               </div>
             ) : (
               <>
@@ -173,23 +174,23 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                 {/* Transparent Disintermediation Ledger */}
                 <div className="p-4 bg-surface-container-low rounded-xl border border-outline-variant space-y-2 text-xs">
                   <div className="font-bold text-primary text-sm flex items-center justify-between border-b border-outline-variant/60 pb-1">
-                    <span>Transparent Pricing Audit</span>
+                    <span>{t('calculator.breakdownTitle')}</span>
                     <span className="text-secondary font-mono">100% Verified</span>
                   </div>
                   <div className="flex justify-between text-secondary font-semibold">
-                    <span>Farmer Realization (76% direct to Kisan):</span>
+                    <span>{t('cart.farmerPayout')}:</span>
                     <span className="font-mono">₹{farmerPayout.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-on-surface-variant">
-                    <span>Direct Cold Logistics (16% reefer transit):</span>
+                    <span>{t('cart.logisticsFee')}:</span>
                     <span className="font-mono">₹{logisticsFee.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-on-surface-variant">
-                    <span>Lab Assay &amp; Escrow Fee (8%):</span>
+                    <span>{t('cart.platformFee')}:</span>
                     <span className="font-mono">₹{platformFee.toFixed(2)}</span>
                   </div>
                   <div className="pt-2 border-t border-outline-variant flex justify-between text-sm font-bold text-primary">
-                    <span>Total Consumer Payable (UPI):</span>
+                    <span>{t('cart.totalAmount')} (UPI):</span>
                     <span className="font-mono text-base text-secondary">₹{totalAmount.toFixed(2)}</span>
                   </div>
                 </div>
@@ -203,7 +204,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                   <span className={`material-symbols-outlined text-lg ${isSubmitting ? 'animate-spin' : ''}`}>
                     {isSubmitting ? 'sync' : 'payment'}
                   </span>
-                  <span>{isSubmitting ? 'Funding Escrow...' : `Proceed to UPI Settlement (₹${totalAmount.toFixed(2)})`}</span>
+                  <span>{isSubmitting ? 'Funding Escrow...' : `${t('cart.checkoutBtn')} (₹${totalAmount.toFixed(2)})`}</span>
                 </button>
               </>
             )}

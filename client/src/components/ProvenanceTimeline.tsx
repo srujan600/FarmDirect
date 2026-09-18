@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { api } from '../services/api';
 import { useAgriStore } from '../context/useAgriStore';
+import { useTranslation } from '../context/useTranslation';
 import type { ProvenanceBatch } from '@types';
 
 export const ProvenanceTimeline: React.FC = () => {
   const { showToast } = useAgriStore();
+  const { t } = useTranslation();
   const [hashInput, setHashInput] = useState('B-NASHIK-99');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationResult, setVerificationResult] = useState<{
@@ -49,13 +51,13 @@ export const ProvenanceTimeline: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-8">
           <span className="badge-verified">
-            <span className="material-symbols-outlined text-[14px] fill-current">qr_code</span> Cryptographic QR Provenance
+            <span className="material-symbols-outlined text-[14px] fill-current">qr_code</span> {t('provenance.badge')}
           </span>
           <h2 className="text-headline-xl font-headline-xl text-primary mt-2">
-            From Farm Soil to Dining Plate in 24 Hours
+            {t('provenance.title')}
           </h2>
           <p className="text-body-md text-on-surface-variant mt-2">
-            Every crate carries a dynamic tamper-evident QR code. Scan on arrival to verify moisture telemetry, harvest latitude, and driver log.
+            {t('provenance.subtitle')}
           </p>
 
           {/* Interactive Hash Verification Input Bar */}

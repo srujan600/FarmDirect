@@ -1,10 +1,13 @@
 import React from 'react';
+import { useTranslation } from '../context/useTranslation';
 
 interface HeroProps {
   onOpenSellHarvest: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenSellHarvest }) => {
+  const { t } = useTranslation();
+
   return (
     <section className="relative min-h-[720px] lg:min-h-[820px] flex items-center overflow-hidden bg-primary text-on-primary" id="hero">
       {/* Seamless Farmer Harvest Video Stream Background with Scrim */}
@@ -34,20 +37,20 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSellHarvest }) => {
           <div className="inline-flex max-w-full items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-surface-container-lowest/15 backdrop-blur-md border border-outline-variant/30 text-surface-container-lowest shadow-sm">
             <span className="w-2.5 h-2.5 rounded-full bg-secondary-fixed animate-pulse shrink-0"></span>
             <span className="text-[11px] sm:text-label-sm font-label-sm tracking-wide leading-snug">
-              1,248 Verified Farms Connected · 14,890 Quintals Shipped
+              {t('hero.badge')}
             </span>
           </div>
 
           {/* Headline & Subtitle */}
           <h1 className="text-3xl sm:text-4xl md:text-display-lg font-extrabold tracking-tight text-surface-container-lowest leading-tight drop-shadow-sm">
-            From the Farm.<br />
+            {t('hero.titleLine1')}<br />
             <span className="text-primary-fixed underline decoration-secondary decoration-4 underline-offset-8">
-              Direct to You.
+              {t('hero.titleLine2')}
             </span>
           </h1>
 
           <p className="text-base sm:text-lg md:text-body-xl font-body-xl text-surface-dim font-normal max-w-2xl leading-relaxed">
-            A transparent marketplace connecting farmers directly with consumers and institutional buyers — delivering fairer farmer realization, fresher produce, and AI-optimized cold-chain logistics.
+            {t('hero.subtitle')}
           </p>
 
           {/* Interactive CTA Cluster */}
@@ -57,7 +60,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSellHarvest }) => {
               className="btn-secondary min-h-[48px] px-5 sm:px-6 rounded-xl text-sm sm:text-base shadow-lg"
             >
               <span className="material-symbols-outlined text-[20px]">storefront</span>
-              <span>Explore Fresh Harvest</span>
+              <span>{t('hero.exploreBtn')}</span>
             </a>
 
             <button
@@ -65,7 +68,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSellHarvest }) => {
               className="btn-accent min-h-[48px] px-5 sm:px-6 rounded-xl text-sm sm:text-base shadow-lg"
             >
               <span className="material-symbols-outlined text-[20px]">add_circle</span>
-              <span>Sell Harvest (किसान विक्री)</span>
+              <span>{t('hero.sellBtn')}</span>
             </button>
 
             <a
@@ -73,27 +76,27 @@ export const Hero: React.FC<HeroProps> = ({ onOpenSellHarvest }) => {
               className="btn-ghost text-surface-container-lowest hover:bg-surface-container-lowest/15 hover:text-primary-fixed min-h-[48px] px-4 rounded-xl text-xs sm:text-label-md"
             >
               <span className="material-symbols-outlined text-[18px]">calculate</span>
-              <span>Calculate Price Advantage</span>
+              <span>{t('hero.calcBtn')}</span>
             </a>
           </div>
 
           {/* Social Proof & Validation */}
           <div className="pt-6 sm:pt-8 border-t border-outline/30 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-surface-container-low">
             <div>
-              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">76%</div>
-              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">Avg. Farmer Realization</div>
+              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">{t('hero.statFarmerRealization')}</div>
+              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">{t('hero.statFarmerRealizationLabel')}</div>
             </div>
             <div>
-              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">&lt; 24 Hrs</div>
-              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">Harvest-to-Doorstep</div>
+              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">{t('hero.statDelivery')}</div>
+              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">{t('hero.statDeliveryLabel')}</div>
             </div>
             <div>
-              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">3.4%</div>
-              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">Produce Transit Spoilage</div>
+              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">{t('hero.statSpoilage')}</div>
+              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">{t('hero.statSpoilageLabel')}</div>
             </div>
             <div>
-              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">100% UPI</div>
-              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">Instant T+0 Escrow</div>
+              <div className="text-lg sm:text-headline-sm font-bold text-surface-container-lowest">{t('hero.statUpi')}</div>
+              <div className="text-[11px] sm:text-body-sm text-outline-variant leading-tight">{t('hero.statUpiLabel')}</div>
             </div>
           </div>
         </div>

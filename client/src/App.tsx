@@ -20,6 +20,9 @@ import { FarmerWizardModal } from './components/FarmerWizardModal';
 import { CartModal } from './components/CartModal';
 import { AuthModal } from './components/AuthModal';
 
+// Multilingual AI Voice Assistant
+import { AIVoiceAssistant } from './components/AIVoiceAssistant/AIVoiceAssistant';
+
 export default function App() {
   const [isFarmerWizardOpen, setIsFarmerWizardOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -164,9 +167,12 @@ export default function App() {
         onClose={() => setIsAuthModalOpen(false)}
       />
 
+      {/* Multilingual AI Voice Assistant Widget */}
+      <AIVoiceAssistant />
+
       {/* Global Toast Notification System */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-5 duration-300 max-w-md w-full px-4 sm:px-0">
+        <div className="fixed bottom-24 right-6 z-50 animate-in fade-in slide-in-from-bottom-5 duration-300 max-w-md w-full px-4 sm:px-0">
           <div
             className={`p-4 rounded-xl shadow-2xl border flex items-center justify-between gap-3 text-sm font-medium ${
               toast.type === 'success'

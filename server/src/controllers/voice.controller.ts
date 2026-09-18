@@ -80,6 +80,48 @@ export class VoiceController {
   }
 
   /**
+   * POST /api/v1/voice/assistant/chat
+   * Multilingual conversational AI assistant supporting all 22 Indian languages
+   */
+  public static async assistantChat(req: Request, res: Response): Promise<void> {
+    try {
+      const { message, language, history, context, synthesizeSpeech } = req.body;
+
+      if (!message || typeof message !== 'string') {
+        res.status(400).json({
+          error: {
+            code: 'INVALID_MESSAGE',
+            message: 'A message string is required for assistant chat.',
+          },
+        });
+        return;
+      }
+
+      const lang = (language as PreferredLanguage) || 'hi';
+      const result = await VoiceService.handleAssistantChat({
+        message,
+        language: lang,
+        history,
+        context,
+        synthesizeSpeech: synthesizeSpeech !== false,
+      });
+
+      res.status(200).json({
+        data: result,
+      });
+    } catch (err) {
+      console.error('Error in voice assistant chat:', err);
+      res.status(500).json({
+        error: {
+          code: 'ASSISTANT_CHAT_FAILED',
+          message: 'Failed to process assistant chat message.',
+          details: err instanceof Error ? err.message : null,
+        },
+      });
+    }
+  }
+
+  /**
    * GET /api/v1/voice/languages
    * Returns metadata for all 22 official Eighth Schedule languages
    */

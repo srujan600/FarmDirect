@@ -426,12 +426,100 @@ export const TRANSLATIONS: Record<TranslationKey, Record<PreferredLanguage, stri
   },
 };
 
+import { resolveTranslation, LOCALES, DEFAULT_LANGUAGE } from '../locales';
+
 /**
- * Returns localized string for given translation key and target language.
- * Falls back to Hindi then English if key or language is undefined.
+ * Checks if a given language uses Right-to-Left (RTL) script direction.
+ * In India's Eighth Schedule: Urdu (ur), Sindhi (sd), and Kashmiri (ks) are Perso-Arabic RTL scripts.
  */
-export function t(key: TranslationKey, lang: PreferredLanguage = 'hi'): string {
-  const bundle = TRANSLATIONS[key];
-  if (!bundle) return key;
-  return bundle[lang] || bundle.hi || bundle.en || key;
+export function isRTL(lang: PreferredLanguage = 'hi'): boolean {
+  return lang === 'ur' || lang === 'sd' || lang === 'ks';
 }
+
+/**
+ * Dynamically applies direction and language attributes to the HTML root without reload.
+ */
+export function applyDocumentLanguage(lang: PreferredLanguage = 'hi'): void {
+  if (typeof document === 'undefined') return;
+  const rtl = isRTL(lang);
+  document.documentElement.setAttribute('dir', rtl ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', lang);
+  if (rtl) {
+    document.documentElement.classList.add('rtl-layout');
+  } else {
+    document.documentElement.classList.remove('rtl-layout');
+  }
+}
+
+/**
+ * Detects browser language and maps to a supported Indic language code if available.
+ */
+export function detectBrowserLanguage(): PreferredLanguage {
+  if (typeof navigator === 'undefined') return DEFAULT_LANGUAGE;
+  const navLang = (navigator.language || '').toLowerCase();
+  const primary = navLang.split('-')[0] as PreferredLanguage;
+  if (primary && primary in LOCALES) {
+    return primary;
+  }
+  return DEFAULT_LANGUAGE;
+}
+
+export const LANGUAGE_STORAGE_KEY = 'agridirect_language';
+
+export function getStoredLanguage(): PreferredLanguage {
+  if (typeof window === 'undefined') return DEFAULT_LANGUAGE;
+  try {
+    const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY) as PreferredLanguage;
+    if (saved && saved in LOCALES) {
+      return saved;
+    }
+  } catch {
+    // Ignore storage read error
+  }
+  return detectBrowserLanguage();
+}
+
+export function persistLanguage(lang: PreferredLanguage): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+    applyDocumentLanguage(lang);
+  } catch {
+    // Ignore storage write error
+  }
+}
+
+/**
+ * Universal translation function.
+ * Supports:
+ * 1. Dotted path resolution: t('hero.titleLine1', language)
+ * 2. Parameter interpolation: t('calculator.quantityKg', language, { count: 10 })
+ * 3. Legacy key resolution: t('marketplace', language)
+ * 4. Fallbacks: Selected Language -> Hindi -> English
+ */
+export function t(
+  key: string,
+  lang: PreferredLanguage = 'hi',
+  params?: Record<string, string | number>
+): string {
+  // Check if it's a dotted path or modern key in LOCALES
+  if (key.includes('.')) {
+    return resolveTranslation(lang, key, params);
+  }
+
+  // Check legacy map
+  const legacyBundle = TRANSLATIONS[key as TranslationKey];
+  if (legacyBundle) {
+    return legacyBundle[lang] || legacyBundle.hi || legacyBundle.en || key;
+  }
+
+  // Try checking top-level in nav or common
+  const navTry = resolveTranslation(lang, `nav.${key}`, params);
+  if (navTry !== `nav.${key}`) return navTry;
+
+  const commonTry = resolveTranslation(lang, `common.${key}`, params);
+  if (commonTry !== `common.${key}`) return commonTry;
+
+  return resolveTranslation(lang, key, params);
+}
+

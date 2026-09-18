@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAgriStore } from '../context/useAgriStore';
+import { useTranslation } from '../context/useTranslation';
 
 interface EnterpriseSandboxProps {
   onOpenSellHarvest: () => void;
@@ -24,6 +25,7 @@ const PERSONA_TABS: PersonaTabConfig[] = [
 
 export const EnterpriseSandbox: React.FC<EnterpriseSandboxProps> = ({ onOpenSellHarvest, onOpenCart }) => {
   const { setRole, showToast } = useAgriStore();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<SandboxPersonaTab>('kisan');
 
   const handleTabSwitch = (tab: SandboxPersonaTab) => {
@@ -43,10 +45,10 @@ export const EnterpriseSandbox: React.FC<EnterpriseSandboxProps> = ({ onOpenSell
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-8">
           <span className="badge-verified">
-            <span className="material-symbols-outlined text-[14px] fill-current">grid_view</span> Unified Disintermediation Grid
+            <span className="material-symbols-outlined text-[14px] fill-current">grid_view</span> {t('sandbox.badge')}
           </span>
           <h2 className="text-headline-xl font-headline-xl text-primary mt-2">
-            Experience the 5 Enterprise Persona Portals
+            {t('sandbox.title')}
           </h2>
           <p className="text-body-md text-on-surface-variant mt-2">
             Toggle between role perspectives to see how Kisan, Grahak, Bulk HoReCa, Logistics Fleet, and Mandi Admin coordinate on a single synchronized ledger.

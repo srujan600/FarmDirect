@@ -1,8 +1,10 @@
 import React from 'react';
 import { useAgriStore } from '../context/useAgriStore';
+import { useTranslation } from '../context/useTranslation';
 
 export const OfflineSyncConsole: React.FC = () => {
   const { isOnline, setOnlineStatus, syncLog, flushOfflineQueue } = useAgriStore();
+  const { t } = useTranslation();
 
   return (
     <section className="section-container section-padding" id="offline-pwa">
@@ -13,13 +15,13 @@ export const OfflineSyncConsole: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           <div className="lg:col-span-6 space-y-4">
             <span className="px-3 py-1 rounded-full bg-secondary-container/20 text-secondary-fixed text-label-sm font-label-sm font-bold uppercase tracking-wider border border-secondary-fixed/20">
-              Open Web Architecture
+              {t('offline.badge')}
             </span>
             <h2 className="text-headline-xl font-headline-xl text-surface-container-lowest leading-tight">
-              Engineered for Offline-First Resilience
+              {t('offline.title')}
             </h2>
             <p className="text-body-md text-surface-dim leading-relaxed">
-              The AgriDirect grid operates on an edge-first philosophy. When rural telecom towers fail, our Workbox Service Worker takes over, recording weighing scales, farmer contracts, and truck manifests into browser IndexedDB.
+              {t('offline.subtitle')}
             </p>
             <div className="grid grid-cols-2 gap-4 pt-2 text-label-sm">
               <div className="p-3 rounded-xl bg-primary-container border border-outline/30">
